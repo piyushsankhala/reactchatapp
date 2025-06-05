@@ -1,38 +1,29 @@
-useEffect(() => {
-  const unsubscribeAuth = auth.onAuthStateChanged(async (user) => {
-    if (!user) {
-      navigate("/login"); // Not logged in
-      return;
+import { useState } from "react";
+import { auth } from "../firebase";
+import { useNavigate } from 'react-router-dom';
+
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import React from "react";
+export default function Signup() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+
+  const handleSignup = async () => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      navigate('./Login');
+    } catch (error) {
+      alert(error.message);
     }
+  };
 
-    // 🧠 Now it's safe to use `user.uid`
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
-
-    if (userSnap.exists()) {
-      const signupTime = userSnap.data().createdAt;
-
-      if (!signupTime) return;
-
-      const q = query(
-        collection(db, "messages"),
-        orderBy("createdAt"),
-        where("createdAt", ">=", signupTime)
-      );
-
-      const unsubscribeMessages = onSnapshot(q, (snapshot) => {
-        const msgs = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setMessages(msgs);
-      });
-
-      // Cleanup message listener
-      return () => unsubscribeMessages();
-    }
-  });
-
-  // Cleanup auth listener
-  return () => unsubscribeAuth();
-}, []);
+  return (
+    <div className="p-4">
+      <input type="email" onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
+      <input type="password" onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+      <button onClick={handleSignup}>Sign Up</button>
+    </div>
+  );
+}
