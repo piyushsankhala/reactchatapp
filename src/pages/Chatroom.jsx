@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { db, auth } from "../firebase";
 import React from "react";
 import { collection, addDoc, onSnapshot, orderBy, query, serverTimestamp } from "firebase/firestore";
-import LogoutButton from "../components/LogoutButton";
+import LogoutButton from "../components/Logoutbutton";
 
 export default function ChatRoom() {
   const [messages, setMessages] = useState([]);
