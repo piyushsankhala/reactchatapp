@@ -7,6 +7,9 @@ import {
   onSnapshot,
   addDoc,
   serverTimestamp,
+  where,
+  getDoc,
+  doc,
 } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -17,16 +20,32 @@ export default function ChatRoom() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const q = query(collection(db, "messages"), orderBy("createdAt"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const msgs = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setMessages(msgs);
-    });
+    const fetchMessages = async () => {
+      const userRef = doc(db, "users", auth.currentUser.uid);
+      const userSnap = await getDoc(userRef);
 
-    return () => unsubscribe(); // Clean up listener
+      if (userSnap.exists()) {
+        const signupTime = userSnap.data().createdAt;
+
+        const q = query(
+          collection(db, "messages"),
+          where("createdAt", ">=", signupTime),
+          orderBy("createdAt")
+        );
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          const msgs = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setMessages(msgs);
+        });
+
+        return () => unsubscribe();
+      }
+    };
+
+    fetchMessages();
   }, []);
 
   const handleSend = async () => {
