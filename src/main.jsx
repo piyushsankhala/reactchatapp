@@ -9,7 +9,7 @@ import {
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import UserList from "./pages/UserList";
-import ChatRoom from "./pages/ChatRoom";
+import ChatRoom from "./pages/Chatroom";
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
