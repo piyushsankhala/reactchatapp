@@ -13,7 +13,7 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("./Chat")
+      navigate("/")
     } catch (error) {
       alert(error.message);
     }
