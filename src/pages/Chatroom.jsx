@@ -1,4 +1,3 @@
-// src/components/ChatRoom.jsx
 import React, { useEffect, useState } from 'react';
 import { db, auth } from '../firebase';
 import {
@@ -58,43 +57,53 @@ export default function ChatRoom() {
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto">
+    <div className="min-h-screen bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 p-6 flex flex-col max-w-md mx-auto rounded-lg shadow-lg text-gray-900">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">
-          Chat with {user?.email || 'User'}
+        <h2 className="text-2xl font-bold drop-shadow-md">
+          Chat with <span className="underline decoration-pink-500">{user?.email || 'User'}</span>
         </h2>
-        <button onClick={handleLogout} className="text-red-500">
+        <button
+          onClick={handleLogout}
+          className="text-red-600 font-semibold hover:text-red-800 transition duration-300"
+          title="Logout"
+        >
           Logout
         </button>
       </div>
 
-      <div className="h-80 overflow-y-auto border p-2 rounded bg-gray-100 mb-4">
+      <div className="flex-grow overflow-y-auto bg-white rounded-md p-4 shadow-inner mb-4 scrollbar-thin scrollbar-thumb-indigo-400 scrollbar-track-indigo-100">
+        {messages.length === 0 && (
+          <p className="text-center text-gray-500 animate-pulse">No messages yet. Start the conversation!</p>
+        )}
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`mb-2 p-2 rounded ${
-              msg.userId === auth.currentUser.uid
-                ? 'bg-blue-200 text-right'
-                : 'bg-white text-left'
-            }`}
+            className={`mb-3 p-3 rounded-lg max-w-[80%] 
+              ${
+                msg.userId === auth.currentUser.uid
+                  ? 'bg-indigo-300 self-end text-right animate-fadeInRight'
+                  : 'bg-indigo-100 self-start text-left animate-fadeInLeft'
+              }`}
           >
-            <p className="text-sm text-gray-600">{msg.userName}</p>
-            <p>{msg.text}</p>
+            <p className="text-xs text-gray-700 font-semibold">{msg.userName}</p>
+            <p className="mt-1">{msg.text}</p>
           </div>
         ))}
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-3">
         <input
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Type a message..."
-          className="flex-1 p-2 border rounded"
+          className="flex-1 px-4 py-3 rounded-md border border-indigo-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition duration-300"
+          onKeyDown={(e) => e.key === 'Enter' && handleSend()}
         />
         <button
           onClick={handleSend}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="bg-indigo-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition duration-300"
+          title="Send Message"
         >
           Send
         </button>
