@@ -1,29 +1,55 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import './index.css';
+import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom/client";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 
-import App from './App';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import ChatRoom from './pages/Chatroom';
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import UserList from "./pages/UserList";
+import ChatRoom from "./pages/ChatRoom";
+import { auth } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+// Wrapper to protect private routes
+function ProtectedRoute({ element }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />}>
-          {/* Login page is default */}
-          <Route index element={<Login />} />
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<Signup />} />
-          <Route path="chat" element={<ChatRoom />} />
-          {/* Redirect unknown routes */}
-          <Route path="*" element={<Navigate to="/" />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  </React.StrictMode>
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) return <div className="p-4">Loading...</div>;
+
+  return user ? element : <Navigate to="/login" replace />;
+}
+
+const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/signup",
+    element: <Signup />,
+  },
+  {
+    path: "/",
+    element: <ProtectedRoute element={<UserList />} />,
+  },
+  {
+    path: "/chat/:chatId",
+    element: <ProtectedRoute element={<ChatRoom />} />,
+  },
+]);
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <RouterProvider router={router} />
 );
