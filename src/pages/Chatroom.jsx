@@ -50,63 +50,71 @@ export default function ChatRoom() {
 
     setNewMessage('');
   };
-
   const handleLogout = async () => {
-    await signOut(auth);
-    navigate('/login');
-  };
+        await signOut(auth);
+        navigate('/login');
+      };
+  
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 p-6 flex flex-col max-w-md mx-auto rounded-lg shadow-lg text-gray-900">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold drop-shadow-md">
-          Chat with <span className="underline decoration-pink-500">{user?.email || 'User'}</span>
-        </h2>
-        <button
-          onClick={handleLogout}
-          className="text-red-600 font-semibold hover:text-red-800 transition duration-300"
-          title="Logout"
-        >
-          Logout
-        </button>
-      </div>
-
-      <div className="flex-grow overflow-y-auto bg-white rounded-md p-4 shadow-inner mb-4 scrollbar-thin scrollbar-thumb-indigo-400 scrollbar-track-indigo-100">
-        {messages.length === 0 && (
-          <p className="text-center text-gray-500 animate-pulse">No messages yet. Start the conversation!</p>
-        )}
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`mb-3 p-3 rounded-lg max-w-[80%] 
-              ${
-                msg.userId === auth.currentUser.uid
-                  ? 'bg-indigo-300 self-end text-right animate-fadeInRight'
-                  : 'bg-indigo-100 self-start text-left animate-fadeInLeft'
-              }`}
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900 text-white flex flex-col items-center p-6">
+      <div className="w-full max-w-3xl bg-white bg-opacity-10 backdrop-blur-md rounded-xl shadow-xl flex flex-col h-full min-h-[90vh] p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-white drop-shadow">
+            Chat with{' '}
+            <span className="underline decoration-pink-500">
+              {user?.email || 'User'}
+            </span>
+          </h2>
+          <button
+            onClick={handleLogout}
+            className="text-red-400 font-semibold hover:text-red-500 transition duration-300"
+            title="Logout"
           >
-            <p className="text-xs text-gray-700 font-semibold">{msg.userName}</p>
-            <p className="mt-1">{msg.text}</p>
-          </div>
-        ))}
-      </div>
+            Logout
+          </button>
+        </div>
 
-      <div className="flex gap-3">
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message..."
-          className="flex-1 px-4 py-3 rounded-md border border-indigo-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition duration-300"
-          onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-        />
-        <button
-          onClick={handleSend}
-          className="bg-indigo-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition duration-300"
-          title="Send Message"
-        >
-          Send
-        </button>
+        <div className="flex-grow overflow-y-auto space-y-4 pr-1 mb-4 custom-scroll">
+          {messages.length === 0 && (
+            <p className="text-center text-gray-300 italic animate-pulse">
+              No messages yet. Start the conversation!
+            </p>
+          )}
+          {messages.map((msg) => (
+            <div
+              key={msg.id}
+              className={`max-w-[75%] px-4 py-2 rounded-lg shadow transition-all 
+                ${
+                  msg.userId === auth.currentUser.uid
+                    ? 'ml-auto bg-indigo-400 text-white animate-fadeInRight'
+                    : 'mr-auto bg-slate-200 text-black animate-fadeInLeft'
+                }`}
+            >
+              <p className="text-xs font-semibold opacity-70 mb-1">
+                {msg.userName}
+              </p>
+              <p>{msg.text}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex gap-2 mt-auto">
+          <input
+            type="text"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Type a message..."
+            className="flex-1 bg-white/70 text-black px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder:text-gray-600"
+            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+          />
+          <button
+            onClick={handleSend}
+            className="bg-indigo-600 text-white px-5 py-3 rounded-md hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+          >
+            Send
+          </button>
+        </div>
       </div>
     </div>
   );
