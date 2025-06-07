@@ -59,9 +59,9 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white/80 backdrop-blur-lg rounded-xl p-8 shadow-2xl">
-        <h2 className="text-3xl font-bold text-center text-gray-900 mb-6 drop-shadow-sm">
+    <div className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900 flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-slate-700 bg-opacity-60 backdrop-blur-md rounded-xl p-8 shadow-2xl text-white">
+        <h2 className="text-3xl font-bold text-center mb-6 drop-shadow tracking-wide">
           Welcome Back 👋
         </h2>
 
@@ -71,19 +71,19 @@ export default function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
-            className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-4 focus:ring-indigo-300 focus:border-indigo-500 transition"
+            className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md shadow-sm text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-400 transition"
           />
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-4 focus:ring-indigo-300 focus:border-indigo-500 transition"
+            className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-md shadow-sm text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-400 transition"
           />
           <button
             onClick={handleLogin}
             disabled={loading}
-            className={`w-full py-3 rounded-md text-white font-medium bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 transition duration-300 ${
+            className={`w-full py-3 rounded-md text-white font-semibold bg-blue-600 hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300 ${
               loading ? "opacity-60 cursor-not-allowed" : ""
             }`}
           >
@@ -92,16 +92,16 @@ export default function Login() {
 
           <button
             onClick={resendVerification}
-            className="text-sm text-indigo-600 hover:underline block text-center"
+            className="text-sm text-blue-400 hover:underline block text-center"
           >
             Resend Verification Email
           </button>
 
-          <p className="text-center text-gray-700">
+          <p className="text-center text-slate-300">
             Not a user?{" "}
             <Link
               to="/signup"
-              className="text-indigo-600 hover:text-indigo-800 font-semibold transition"
+              className="text-blue-400 hover:text-blue-500 font-semibold transition"
             >
               Sign Up
             </Link>
